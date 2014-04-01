@@ -21,4 +21,9 @@ class RegisterController extends AbstractActionController {
         $viewModel = new ViewModel();
         return $viewModel;
     }
+    public function processAction() {
+        $viewModel = new ViewModel();
+        $viewModel->setTemplate('users/register/confirm');
+        return $viewModel;
+    }
 }

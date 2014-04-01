@@ -16,25 +16,34 @@ class RegisterForm extends Form {
         parent::__construct('Register');
         $this->setAttribute('method', 'post');
         $this->setAttribute('enctype', 'multipart/form-data');
+        $this->setAttribute('class', 'form-signin');
+
 
         $this->add(array(
             'name' => 'name',
             'attributes' => array(
-                'type' => 'text'
+                'class' => 'input-block-level',
+                'type' => 'text',
+                'placeholder' => 'Full Name'
             ),
-            'options' => array(
-                'label' => 'Full Name'
+            'validators' => array(
+                'name' => 'Alpha',
+                'options' => array(
+                    'allowWhiteSpace' => TRUE,
+                    'messages' => array(
+                        \Zend\I18n\Validator\Alpha::INVALID => 'Invalid Name'
+                    )
+                )
             )
         ));
 
         $this->add(array(
             'name' => 'email',
             'attributes' => array(
+                'class' => 'input-block-level',
                 'type' => 'email',
-                'required' => 'required'
-            ),
-            'options' => array(
-                'label' => 'Email'
+                'required' => 'required',
+                'placeholder' => 'Your e-mail'
             ),
             'filters' => array(
                 array(
@@ -52,35 +61,35 @@ class RegisterForm extends Form {
                 )
             )
         ));
-        
+
         $this->add(array(
             'name' => 'password',
             'attributes' => array(
+                'class' => 'input-block-level',
                 'type' => 'password',
-                'required' => 'required'
+                'required' => 'required',
+                'placeholder' => 'Password'
             ),
-            'options' => array(
-                'label' => 'Password'
-            )
         ));
-        
+
         $this->add(array(
-            'name' => 'confirm-password',
+            'name' => 'confirm_password',
             'attributes' => array(
+                'class' => 'input-block-level',
                 'type' => 'password',
-                'required' => 'required'
+                'required' => 'required',
+                'placeholder' => 'Password again'
             ),
-            'options' => array(
-                'label' => 'Password Again'
-            )
         ));
-        
+
         $this->add(array(
             'name' => 'submit',
             'attributes' => array(
-                'type' => 'button',
+                'class' => 'btn btn-large btn-primary',
+                'type' => 'submit',
                 'value' => 'Register'
             ),
         ));
     }
+
 }
