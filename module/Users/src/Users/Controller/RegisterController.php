@@ -12,6 +12,8 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Users\Form\RegisterForm;
 use Users\Form\RegisterFilter;
+use Users\Model\Users;
+use Users\Model\UsersTable;
 
 class RegisterController extends AbstractActionController {
 
@@ -47,10 +49,26 @@ class RegisterController extends AbstractActionController {
             $viewModel->setTemplate('users/register/index');
             return $viewModel;
         }
+        
+        $this->createUser($form->getData());
+        
         return $this->redirect()->toRoute(NULL, array(
                     'controller' => 'register',
                     'action' => 'confirm'
         ));
+    }
+
+    protected function createUser(array $data) {
+        $sm = $this->getServiceLocator();
+        $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+        $resultSetPrototype = new \Zend\Db\ResultSet\ResultSet();
+        $resultSetPrototype->setArrayObjectPrototype(new \Users\Model\Users);
+        $tableGateway = new \Zend\Db\TableGateway\TableGateway('users', $dbAdapter, null, $resultSetPrototype);
+        $users = new Users();
+        $users->exchangeArray($data);
+        $usersTable = new UsersTable($tableGateway);
+        $usersTable->saveUser($users);
+        return TRUE;
     }
 
 }
