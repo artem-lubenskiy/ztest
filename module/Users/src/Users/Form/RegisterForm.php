@@ -26,15 +26,6 @@ class RegisterForm extends Form {
                 'type' => 'text',
                 'placeholder' => 'Full Name'
             ),
-            'validators' => array(
-                'name' => 'Alpha',
-                'options' => array(
-                    'allowWhiteSpace' => TRUE,
-                    'messages' => array(
-                        \Zend\I18n\Validator\Alpha::INVALID => 'Invalid Name'
-                    )
-                )
-            )
         ));
 
         $this->add(array(
