@@ -63,6 +63,17 @@ class RegisterFilter extends InputFilter {
         $this->add(array(
             'name' => 'confirm_password',
             'required' => TRUE,
+            'validators' => array(
+                array(
+                    'name' => 'Identical',
+                    'options' => array(
+                        'token' => 'password',
+                        'messages' => array(
+                        \Zend\Validator\Identical::NOT_SAME => 'Passwords do not match'
+                        )
+                    )
+                )
+            ),
         ));
     }
 

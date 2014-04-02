@@ -28,6 +28,11 @@ body {
     padding: 7px 9px;
 } 
 
+form li {
+    color: #FF0000;
+    font-style: italic;
+}
+
 .zf-green {
     color: #68b604;
 }
