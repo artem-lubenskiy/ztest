@@ -10,17 +10,13 @@ namespace Users\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-use Zend\Authentication\AuthenticationService;
-use Zend\Authentication\Adapter\DbTable as DbTableAuthAdapter;
-use Users\Form\LoginForm;
-use Users\Form\LoginFilter;
 
 class LoginController extends AbstractActionController {
     
     protected $_authservice;
     
     public function indexAction() {
-        $form = new LoginForm();
+        $form = $this->getServiceLocator()->get('LoginForm');
         $viewModel = new ViewModel(array('form' => $form));
         return $viewModel;
     }
@@ -31,10 +27,9 @@ class LoginController extends AbstractActionController {
                         'action' => 'index'
             ));
         }
+        
         $post = $this->request->getPost();
-        $form = new LoginForm;
-        $inputFilter = new LoginFilter();
-        $form->setInputFilter($inputFilter);
+        $form = $this->getServiceLocator()->get('LoginForm');
         $form->setData($post);
         
         if (!$form->isValid()) {
@@ -49,20 +44,24 @@ class LoginController extends AbstractActionController {
                 ->setIdentity($this->request->getPost('email'))
                 ->setCredential($this->request->getPost('password'));
         $result = $this->getAuthService()->authenticate();
-        if($result->isValid()){
-            $this->getAuthService()->getStorage()->write($this->request->getPost('email'));
+        
+        if(!$result->isValid()){
+            $viewModel = new ViewModel(array(
+                'error' => TRUE,
+                'form' => $form
+            ));
+            $viewModel->setTemplate('users/login/index');
+            return $viewModel;
+        }
+        $this->getAuthService()->getStorage()->write($this->request->getPost('email'));
             return $this->redirect()->toRoute(NULL, array(
                     'controller' => 'login',
                     'action' => 'confirm'
                     ));
-        }
     }
     public function getAuthService() {
         if (!$this->_authservice) {
-            $dbAdapter = $this->getServiceLocator()->get('Zend\Db\Adapter\Adapter');
-            $dbTableAuthAdapter = new DbTableAuthAdapter($dbAdapter, 'users', 'email', 'password', 'MD5(?)');
-            $this->_authservice = new AuthenticationService();
-            $this->_authservice->setAdapter($dbTableAuthAdapter);
+            $this->_authservice = $this->getServiceLocator()->get('AuthService');
         }
         return $this->_authservice;
     }
@@ -71,6 +70,7 @@ class LoginController extends AbstractActionController {
         $viewModel = new ViewModel(array(
             'user_email' => $user_email
         ));
+        $viewModel->setTemplate('users/login/confirm');
         return $viewModel;
     }
 }
