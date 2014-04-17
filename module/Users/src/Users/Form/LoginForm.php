@@ -11,55 +11,44 @@ namespace Users\Form;
 use Zend\Form\Form;
 
 class LoginForm extends Form {
-    public function __construct($name = null) {
-        parent::__construct('Login');
-        $this->setAttribute('method', 'post');
-        $this->setAttribute('enctype', 'multipart/form-data');
-        $this->setAttribute('class', 'form-signin');
-    
+    public function __construct() {
+        parent::__construct('Login', array(
+            'method' => 'post',
+        ));
+
         $this->add(array(
             'name' => 'email',
             'attributes' => array(
-                'class' => 'input-block-level',
-                'type' => 'email',
-                'required' => 'required',
-                'placeholder' => 'Your e-mail'
+                'type' => 'text',
+                'autocomplete' => 'off',
+                'placeholder' => 'Your Email',
+                'id' => 'login-email',
+                'class' => 'form-control',
+                'autofocus' => 'autofocus',
+                'tabindex' => 1,
             ),
-            'filters' => array(
-                array(
-                    'name' => 'StringTrim'
-                )
-            ),
-            'validators' => array(
-                array(
-                    'name' => 'EmailAddress',
-                    'options' => array(
-                        'messages' => array(
-                            \Zend\Validator\EmailAddress::INVALID_FORMAT => 'Email address format is invalid'
-                        )
-                    )
-                )
-            )
         ));
-        
+
         $this->add(array(
             'name' => 'password',
             'attributes' => array(
-                'class' => 'input-block-level',
                 'type' => 'password',
-                'required' => 'required',
-                'placeholder' => 'Password'
+                'autocomplete' => 'off',
+                'placeholder' => 'Your password',
+                'id' => 'login-password',
+                'class' => 'form-control',
+                'tabindex' => 2,
             ),
         ));
-        
+
         $this->add(array(
             'name' => 'submit',
             'attributes' => array(
-                'class' => 'btn btn-large btn-primary',
                 'type' => 'submit',
-                'value' => 'Login'
+                'class' => 'btn btn-primary btn-block',
+                'tabindex' => 7,
+                'value' => 'Log in'
             ),
         ));
-        
     }
 }

@@ -1,29 +1,27 @@
 <div class="container">
     <?php if ($this->error): ?>
-        <p class="error">There were one or more issues with your submission. Please correct them as indicated below.</p>
+        <p class="error"><?php echo $this->error; ?></p>
         <?php
     endif;
 
     $form = $this->form;
     $form->prepare();
-    $form->setAttribute('action', $this->url(NULL, array('controller' => 'Login', 'action' => 'login')));
-    $form->setAttribute('method', 'post');
+    $form->setAttributes(array(
+        'action' => $this->url(NULL, array('controller' => 'login', 'action' => 'login')),
+        'enctype' => 'multipart/form-data',
+        'class' => 'form-signin',
+        'role' => 'form'
+    ));
+    //$form->setAttribute('method', 'post');
     echo $this->form()->openTag($form);
-    ?> 
-        
-    <h2>Login</h2>
-    
+    ?>
+    <h2>Login form</h2>
     <?php
     echo $this->formElement($form->get('email'));
     echo $this->formElementErrors($form->get('email'));
-
     echo $this->formElement($form->get('password'));
     echo $this->formElementErrors($form->get('password'));
-
     echo $this->formElement($form->get('submit'));
-    echo $this->formElementErrors($form->get('submit'));
-
     echo $this->form()->closeTag();
     ?>
-    <a href="/users"><< Back to Home</a>
 </div>

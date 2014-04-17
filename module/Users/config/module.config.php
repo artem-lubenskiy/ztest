@@ -4,7 +4,7 @@ return array(
     'controllers' => array(
         'invokables' => array(
             'Users\Controller\Index' => 'Users\Controller\IndexController',
-            'Users\Controller\Register' => 'Users\Controller\RegisterController',
+            'Users\Controller\Registration' => 'Users\Controller\RegistrationController',
             'Users\Controller\Login' => 'Users\Controller\LoginController',
         ),
     ),
@@ -50,6 +50,35 @@ return array(
         ),
     ),
     'service_manager' => array(
-        
+        'invokables' => array(
+            'LoginFilter' => 'Users\Form\LoginFilter',
+            'RegistrationFilter' => 'Users\Form\RegistrationFilter',
+            'LoginForm' => 'Users\Form\LoginForm',
+            'RegistrationForm' => 'Users\Form\RegistrationForm',
+        ),
+        'factories' => array(
+        )
+    ),
+    'doctrine' => array(
+        'driver' => array(
+            'users_entity' => array(
+                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                'cache' => 'array',
+                'paths' => array(__DIR__ . '/../src/Users/Entity'),
+            ),
+            'orm_default' => array(
+                'drivers' => array(
+                    'Users\Entity' => 'users_entity'
+                )
+            ),
+        ),
+        'authentication' => array(
+            'orm_default' => array(
+                'object_manager' => 'Doctrine\ORM\EntityManager',
+                'identity_class' => 'Users\Entity\Users',
+                'identity_property' => 'email',
+                'credential_property' => 'password',
+            ),
+        ),
     ),
 );

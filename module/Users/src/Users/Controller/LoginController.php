@@ -11,66 +11,89 @@ namespace Users\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
-class LoginController extends AbstractActionController {
-    
+
+class LoginController extends AbstractActionController
+{
+
     protected $_authservice;
-    
-    public function indexAction() {
-        $form = $this->getServiceLocator()->get('LoginForm');
-        $viewModel = new ViewModel(array('form' => $form));
-        return $viewModel;
+
+    public function indexAction()
+    {
+        $objectManager = $this->serviceLocator->get('Doctrine\ORM\EntityManager');
+        $user = $objectManager->find('Users\Entity\Users', 1);
+        echo $user->getEmail();
+        $form = $this->serviceLocator->get('LoginForm');
+        return new ViewModel(array(
+            'form' => $form,
+        ));
     }
-    public function loginAction() {
+
+    public function loginAction()
+    {
         if(!$this->request->isPost()) {
             return $this->redirect()->toRoute(NULL, array(
-                        'controller' => 'login',
-                        'action' => 'index'
+                'controller' => 'login',
+                'action' => 'index',
             ));
         }
-        
-        $post = $this->request->getPost();
+
+        $data = $this->getRequest()->getPost();
+
         $form = $this->getServiceLocator()->get('LoginForm');
-        $form->setData($post);
-        
-        if (!$form->isValid()) {
-            $viewModel = new ViewModel(array(
-                'error' => TRUE,
+        $form->setInputFilter(
+            $this->getServiceLocator()->get('LoginFilter')
+        );
+
+        $form->setData($data);
+
+        if(!$form->isValid()) {
+            $model = new ViewModel(array(
                 'form' => $form,
             ));
-            $viewModel->setTemplate('users/login/index');
-            return $viewModel;
+            $model->setTemplate('users/login/index');
+            return $model;
         }
-        $this->getAuthService()->getAdapter()
-                ->setIdentity($this->request->getPost('email'))
-                ->setCredential($this->request->getPost('password'));
-        $result = $this->getAuthService()->authenticate();
-        
-        if(!$result->isValid()){
-            $viewModel = new ViewModel(array(
-                'error' => TRUE,
-                'form' => $form
-            ));
-            $viewModel->setTemplate('users/login/index');
-            return $viewModel;
+
+        $authService = $this->getServiceLocator()->get('Zend\Authentication\AuthenticationService');
+
+        $adapter = $authService->getAdapter();
+        $adapter->setIdentityValue($data['email']);
+        $adapter->setCredentialValue($data['password']);
+
+        $authResult = $authService->authenticate();
+
+        if ($authResult->isValid()) {
+            return $this->redirect()->toRoute('home');
         }
-        $this->getAuthService()->getStorage()->write($this->request->getPost('email'));
-            return $this->redirect()->toRoute(NULL, array(
-                    'controller' => 'login',
-                    'action' => 'confirm'
-                    ));
-    }
-    public function getAuthService() {
-        if (!$this->_authservice) {
-            $this->_authservice = $this->getServiceLocator()->get('AuthService');
-        }
-        return $this->_authservice;
-    }
-    public function confirmAction() {
-        $user_email = $this->getAuthService()->getStorage()->read();
-        $viewModel = new ViewModel(array(
-            'user_email' => $user_email
+
+        $model = new ViewModel(array(
+            'error' => 'Your authentication credentials are not valid',
+            'form' => $form,
         ));
-        $viewModel->setTemplate('users/login/confirm');
-        return $viewModel;
+
+        $model->setTemplate('users/login/index');
+        return $model;
+    }
+
+    public function testAction()
+    {
+        if ($user = $this->identity()) {
+            return new ViewModel(array(
+                'identity' => 'You are logged in.',
+            ));
+        } else {
+            return new ViewModel(array(
+                'identity' => 'You are not logged in',
+            ));
+        }
+    }
+
+    public function logoutAction() {
+        $authService = $this->getServiceLocator()->get('Zend\Authentication\AuthenticationService');
+        if ($authService->hasIdentity()) {
+            $authService->clearIdentity();
+        }
+
+        $this->redirect()->toUrl('/users/login/test');
     }
 }
