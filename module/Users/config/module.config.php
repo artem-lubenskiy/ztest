@@ -4,7 +4,7 @@ return array(
     'controllers' => array(
         'invokables' => array(
             'Users\Controller\Index' => 'Users\Controller\IndexController',
-            'Users\Controller\Registration' => 'Users\Controller\RegistrationController',
+            'Users\Controller\Signup' => 'Users\Controller\SignupController',
             'Users\Controller\Login' => 'Users\Controller\LoginController',
         ),
     ),
@@ -52,9 +52,9 @@ return array(
     'service_manager' => array(
         'invokables' => array(
             'LoginFilter' => 'Users\Form\LoginFilter',
-            'RegistrationFilter' => 'Users\Form\RegistrationFilter',
+            'SignupFilter' => 'Users\Form\SignupFilter',
             'LoginForm' => 'Users\Form\LoginForm',
-            'RegistrationForm' => 'Users\Form\RegistrationForm',
+            'SignupForm' => 'Users\Form\SignupForm',
         ),
         'factories' => array(
         )

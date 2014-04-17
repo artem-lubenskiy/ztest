@@ -1,13 +1,10 @@
 /* Inputed passwords checker */
 
-$('input[name=submit]').css('display','none');
-
-$('input[name=password-repeat]').keyup(function(event) {
+$('input[name=submit]').click(function(event) {
     var $password = $('input[name=password]').val();
-    var $submit = $('input[name=submit]');
-    if($(this).val() === $password) {
-        $submit.css('display','block');
-    } else {
-        $submit.css('display','none');
+    var $passwordRepeat = $('input[name=password-repeat]').val();
+    if(!($passwordRepeat === $password)) {
+        event.preventDefault();
+        $('#pass-match-error').html('<i>Passwords do not match.</i>');
     }
 });

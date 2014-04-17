@@ -10,10 +10,10 @@ namespace Users\Form;
 
 use Zend\Form\Form;
 
-class RegistrationForm extends Form {
+class SignupForm extends Form {
 
     public function __construct() {
-        parent::__construct('Registration', array(
+        parent::__construct('Signup', array(
             'method' => 'post',
         ));
 

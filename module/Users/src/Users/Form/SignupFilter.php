@@ -10,7 +10,7 @@ namespace Users\Form;
 
 use Zend\InputFilter\InputFilter;
 
-class RegistrationFilter extends InputFilter {
+class SignupFilter extends InputFilter {
 
     public function __construct() {
 

@@ -169,7 +169,18 @@ class Users {
     }
 
     public function addUser($data) {
-
+        if(is_object($data)) {
+            $this->firstName = $data['firstName'];
+            $this->secondName = $data['secondName'];
+            $this->patrName = $data['patrName'];
+            $this->email = $data['email'];
+            // @ToDo create Hashing
+            $this->password = $data['password'];
+            $this->regDate = new \DateTime("now");
+            $this->typeId = 1;
+            return $this;
+        }
+            throw new \InvalidArgumentException('Invalid input data');
     }
 
 }

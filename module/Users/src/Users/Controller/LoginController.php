@@ -33,7 +33,6 @@ class LoginController extends AbstractActionController
         if(!$this->request->isPost()) {
             return $this->redirect()->toRoute(NULL, array(
                 'controller' => 'login',
-                'action' => 'index',
             ));
         }
 
