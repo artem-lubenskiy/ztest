@@ -14,8 +14,6 @@ use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 use Zend\Authentication\AuthenticationService;
-//use Doctrine\ORM\EntityManager;
-//use Users\Entity\Users;
 
 
 class Module implements AutoloaderProviderInterface
@@ -56,8 +54,13 @@ class Module implements AutoloaderProviderInterface
             'abstract_factories' => array(),
             'aliases' => array(),
             'factories' => array(
-                'Zend\Authentication\AuthenticationService' => function($serviceManager) {
-                        return $serviceManager->get('doctrine.authenticationservice.orm_default');
+                'Zend\Authentication\AuthenticationService' => function($sm) {
+                        return $sm->get('doctrine.authenticationservice.orm_default');
+                    },
+                'UsersService' => function($sm) {
+                        $usersService = new \Users\Service\Users();
+                        $usersService->setServiceLocator($sm);
+                        return $usersService;
                     },
             ),
             'invokables' => array(),

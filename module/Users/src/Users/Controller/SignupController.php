@@ -8,7 +8,6 @@
 
 namespace Users\Controller;
 
-use Users\Entity\Users;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
@@ -16,7 +15,9 @@ class SignupController extends AbstractActionController {
 
     public function indexAction() {
         $form = $this->getServiceLocator()->get('SignupForm');
-        $viewModel = new ViewModel(array('form' => $form));
+        $viewModel = new ViewModel(array(
+            'form' => $form
+        ));
         return $viewModel;
     }
 
@@ -26,38 +27,18 @@ class SignupController extends AbstractActionController {
                 'controller' => 'signup',
             ));
         }
-        $data = $this->getRequest()->getPost();
-        $form = $this->getServiceLocator()->get('SignupForm');
-        $form->setInputFilter(
-            $this->getServiceLocator()->get('SignupFilter')
-        );
-        $form->setData($data);
-        if(!$form->isValid()) {
-            $model = new ViewModel(array(
-                'form' => $form,
+        $userData = $this->getRequest()->getPost();
+
+        $usersService = $this->getServiceLocator()->get('UsersService');
+        $signupResult = $usersService->signup($userData);
+
+        if(is_array($signupResult)) {
+            $viewModel = new ViewModel(array(
+                'form' => $signupResult['form'],
             ));
-            $model->setTemplate('users/signup/index');
-            return $model;
+            $viewModel->setTemplate('users/signup/index');
+            return $viewModel;
         }
-        $objectManager = $this->serviceLocator->get('Doctrine\ORM\EntityManager');
-
-        $emailExists = $objectManager
-            ->getRepository('Users\Entity\Users')
-            ->findOneBy(array('email' => $data['email']));
-
-        if($emailExists) {
-            $model = new ViewModel(array(
-                'error' => 'An account with this email is already registered.',
-                'form' => $form,
-            ));
-            $model->setTemplate('users/signup/index');
-            return $model;
-        }
-
-        $users = new Users();
-        $users->addUser($data);
-        $objectManager->persist($users);
-        $objectManager->flush();
 
         $this->redirect()->toRoute(NULL, array(
             'controller' => 'login',

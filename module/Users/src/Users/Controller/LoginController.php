@@ -19,10 +19,7 @@ class LoginController extends AbstractActionController
 
     public function indexAction()
     {
-        $objectManager = $this->serviceLocator->get('Doctrine\ORM\EntityManager');
-        $user = $objectManager->find('Users\Entity\Users', 1);
-        echo $user->getEmail();
-        $form = $this->serviceLocator->get('LoginForm');
+        $form = $this->getServiceLocator()->get('LoginForm');
         return new ViewModel(array(
             'form' => $form,
         ));
@@ -36,42 +33,19 @@ class LoginController extends AbstractActionController
             ));
         }
 
-        $data = $this->getRequest()->getPost();
+        $userData = $this->getRequest()->getPost();
 
-        $form = $this->getServiceLocator()->get('LoginForm');
-        $form->setInputFilter(
-            $this->getServiceLocator()->get('LoginFilter')
-        );
+        $usersService = $this->getServiceLocator()->get('UsersService');
+        $authResult = $usersService->authenticate($userData);
 
-        $form->setData($data);
-
-        if(!$form->isValid()) {
+        if(is_array($authResult)) {
             $model = new ViewModel(array(
-                'form' => $form,
+                'form' => $authResult['form'],
             ));
             $model->setTemplate('users/login/index');
             return $model;
         }
-
-        $authService = $this->getServiceLocator()->get('Zend\Authentication\AuthenticationService');
-
-        $adapter = $authService->getAdapter();
-        $adapter->setIdentityValue($data['email']);
-        $adapter->setCredentialValue($data['password']);
-
-        $authResult = $authService->authenticate();
-
-        if ($authResult->isValid()) {
             return $this->redirect()->toRoute('home');
-        }
-
-        $model = new ViewModel(array(
-            'error' => 'Your authentication credentials are not valid',
-            'form' => $form,
-        ));
-
-        $model->setTemplate('users/login/index');
-        return $model;
     }
 
     public function testAction()
@@ -88,11 +62,9 @@ class LoginController extends AbstractActionController
     }
 
     public function logoutAction() {
-        $authService = $this->getServiceLocator()->get('Zend\Authentication\AuthenticationService');
-        if ($authService->hasIdentity()) {
-            $authService->clearIdentity();
-        }
-
+        $this->getServiceLocator()
+            ->get('UsersService')
+            ->logout();
         $this->redirect()->toUrl('/users/login/test');
     }
 }

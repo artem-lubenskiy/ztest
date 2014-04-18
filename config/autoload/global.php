@@ -35,5 +35,13 @@ return array(
             'navigation' => 'Zend\Navigation\Service\DefaultNavigationFactory',
             'Doctrine\Db\Adapter' => 'DoctrineModule\Service\Authentication\AdapterFactory'
         )
-    )
+    ),
+    'session' => array(
+        'SavePath' => __DIR__ . '/../../data/session',
+        'GcMaxlifetime' => 86400,
+    ),
+    'settings' => array(
+        // Remember me setting in seconds (defaults to 14 days)
+        'rememberMe' => 60*60*24*14,
+    ),
 );

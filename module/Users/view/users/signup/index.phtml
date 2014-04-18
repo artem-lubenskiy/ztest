@@ -1,9 +1,5 @@
 <div class="container">
-    <?php if ($this->error): ?>
-        <p class="error"><?php echo $this->error; ?></p>
-        <?php
-    endif;
-
+    <?php
     $form = $this->form;
     $form->prepare();
     $form->setAttributes(array(

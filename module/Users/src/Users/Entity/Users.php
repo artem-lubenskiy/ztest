@@ -31,6 +31,8 @@ class Users {
     protected $typeId;
     /** @ORM\Column(type="date") */
     protected $regDate;
+    /** @ORM\Column(type="string") */
+    protected $salt;
 
     /**
      * @param mixed $id
@@ -168,16 +170,32 @@ class Users {
         return $this->typeId;
     }
 
+    /**
+     * @param mixed $salt
+     */
+    public function setSalt($salt)
+    {
+        $this->salt = $salt;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSalt()
+    {
+        return $this->salt;
+    }
+
     public function addUser($data) {
         if(is_object($data)) {
             $this->firstName = $data['firstName'];
             $this->secondName = $data['secondName'];
             $this->patrName = $data['patrName'];
             $this->email = $data['email'];
-            // @ToDo create Hashing
-            $this->password = $data['password'];
+            $this->password = $data['password']['hash'];
             $this->regDate = new \DateTime("now");
             $this->typeId = 1;
+            $this->salt = $data['password']['salt'];
             return $this;
         }
             throw new \InvalidArgumentException('Invalid input data');
