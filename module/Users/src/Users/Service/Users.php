@@ -92,7 +92,7 @@ class Users
                 'form' => $form,
             );
         }
-        $salt = !$this->_getSalt($userData['email']);
+        $salt = $this->_getSalt($userData['email']);
 
         if(!$salt) {
             $form->get('password')->setValue('');
