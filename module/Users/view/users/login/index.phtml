@@ -1,5 +1,5 @@
 <div class="container">
-        <?php
+    <?php
     $form = $this->form;
     $form->prepare();
     $form->setAttributes(array(
@@ -8,6 +8,7 @@
         'class' => 'form-signin',
         'role' => 'form'
     ));
+    $formLabel = $this->plugin('formLabel');
     //$form->setAttribute('method', 'post');
     echo $this->form()->openTag($form);
     ?>
@@ -17,6 +18,14 @@
     echo $this->formElementErrors($form->get('email'));
     echo $this->formElement($form->get('password'));
     echo $this->formElementErrors($form->get('password'));
+    ?>
+    <label class="checkbox" for="<?php echo $form->get('remember-me')->getAttribute('id'); ?>">
+        <?php
+        echo $this->formElement($form->get('remember-me'));
+        echo $form->get('remember-me')->getLabel();
+        ?>
+    </label>
+    <?php
     echo $this->formElement($form->get('submit'));
     echo $this->formElementErrors($form->get('submit'));
     echo $this->form()->closeTag();

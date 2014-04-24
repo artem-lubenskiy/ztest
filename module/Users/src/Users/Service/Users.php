@@ -3,12 +3,14 @@
 namespace Users\Service;
 
 use Users\Entity\Users as UsersEntity;
+use Zend\Session\Container as Session;
 
 class Users
 {
     protected $_serviceLocator;
 
-    public function setServiceLocator($serviceLocator) {
+    public function setServiceLocator($serviceLocator)
+    {
         $this->_serviceLocator = $serviceLocator;
         return $this;
     }
@@ -70,11 +72,11 @@ class Users
         return FALSE;
     }
 
-    public function editUser()
+    public function editUser($userData)
     {
     }
 
-    public function deleteUser()
+    public function deleteUser($id)
     {
     }
 
@@ -86,7 +88,7 @@ class Users
         );
         $form->setData($userData);
 
-        if(!$form->isValid()) {
+        if (!$form->isValid()) {
             return array(
                 'error' => TRUE,
                 'form' => $form,
@@ -94,10 +96,10 @@ class Users
         }
         $salt = $this->_getSalt($userData['email']);
 
-        if(!$salt) {
+        if (!$salt) {
             $form->get('password')->setValue('');
             $form->get('submit')->setMessages(array(
-                'Your authentication email are not valid',
+                'Your authentication credentials are not valid',
             ));
             return array(
                 'error' => TRUE,
@@ -125,18 +127,34 @@ class Users
                 'form' => $form,
             );
         }
+
+        $identity = $authResult->getIdentity();
+
+        $authService->getStorage()->write($identity);
+
+        $container = new Session('initialized');
+        $container->httpClient = md5($_SERVER['REMOTE_ADDR'] . $_SERVER['HTTP_USER_AGENT']);
+
+        $config = $this->_serviceLocator->get('Configuration');
+
+        if ($userData['remember-me'] === '1') {
+            $container->getDefaultManager()->rememberMe(
+                isset($config['settings']) && isset($config['settings']['rememberMe']) ? $config['settings']['rememberMe'] : 60 * 60 * 24 * 14
+            );
+        }
     }
 
     public function logout()
     {
         $authService = $this->_serviceLocator->get('Zend\Authentication\AuthenticationService');
         if ($authService->hasIdentity()) {
+            Session::getDefaultManager()->forgetMe();
             $authService->clearIdentity();
         }
     }
 
     /**
-     * Hash password
+     * Hashing password
      *
      * @param string $password
      * @param string $salt
@@ -145,9 +163,9 @@ class Users
      */
     protected function _hashPassword($password, $salt = NULL)
     {
-        if(!$salt) {
+        if (!$salt) {
             $salt = hash('md5', time());
-            $passwordHash = hash('sha512', $salt.$password);
+            $passwordHash = hash('sha512', $salt . $password);
 
             $password = array(
                 'hash' => $passwordHash,
@@ -155,13 +173,13 @@ class Users
             );
             return $password;
         } else {
-            $password = hash('sha512', $salt.$password);
+            $password = hash('sha512', $salt . $password);
             return $password;
         }
-
     }
 
-    protected function _getSalt($email) {
+    protected function _getSalt($email)
+    {
         $entityManager = $this->_serviceLocator->get('Doctrine\ORM\EntityManager');
 
         $user = $entityManager

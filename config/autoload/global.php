@@ -21,24 +21,26 @@ return array(
             PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\'',
         ),
     ),
-    'navigation' => array(
-        'default' => array(
-            array(
-                'label' => 'Home',
-                'route' => 'home',
-            ),
-        ),
-    ),
     'service_manager' => array(
         'factories' => array(
             //'Zend\Db\Adapter\Adapter' => 'Zend\Db\Adapter\AdapterServiceFactory',
-            'navigation' => 'Zend\Navigation\Service\DefaultNavigationFactory',
             'Doctrine\Db\Adapter' => 'DoctrineModule\Service\Authentication\AdapterFactory'
         )
     ),
     'session' => array(
         'SavePath' => __DIR__ . '/../../data/session',
         'GcMaxlifetime' => 86400,
+        'config' => array(
+            'class' => 'Zend\Session\Config\SessionConfig',
+            'options' => array(
+                'name' => 'ztest',
+            ),
+        ),
+        'storage' => 'Zend\Session\Storage\SessionArrayStorage',
+        'validators' => array(
+            'Zend\Session\Validator\RemoteAddr',
+            'Zend\Session\Validator\HttpUserAgent',
+        ),
     ),
     'settings' => array(
         // Remember me setting in seconds (defaults to 14 days)

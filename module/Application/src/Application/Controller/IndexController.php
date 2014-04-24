@@ -10,7 +10,6 @@
 
 namespace Application\Controller;
 
-use Application\Form\RegistrationForm;
 use Doctrine\DBAL\Schema\View;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;

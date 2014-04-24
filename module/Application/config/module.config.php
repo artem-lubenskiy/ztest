@@ -44,8 +44,7 @@ return array(
                                 'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
                                 'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                             ),
-                            'defaults' => array(
-                            ),
+                            'defaults' => array(),
                         ),
                     ),
                 ),
@@ -59,6 +58,9 @@ return array(
         ),
         'aliases' => array(
             'translator' => 'MvcTranslator',
+        ),
+        'factories' => array(
+            'navigation' => 'Zend\Navigation\Service\DefaultNavigationFactory',
         ),
     ),
     'translator' => array(
@@ -95,8 +97,11 @@ return array(
     // Placeholder for console routes
     'console' => array(
         'router' => array(
-            'routes' => array(
-            ),
+            'routes' => array(),
+        ),
+    ),
+    'navigation' => array(
+        'default' => array(
         ),
     ),
 );

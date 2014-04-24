@@ -23,7 +23,7 @@ class LoginForm extends Form {
                 'autocomplete' => 'off',
                 'placeholder' => 'Your Email',
                 'id' => 'login-email',
-                'class' => 'form-control',
+                'class' => 'input-block-level',
                 'autofocus' => 'autofocus',
                 'tabindex' => 1,
             ),
@@ -36,7 +36,7 @@ class LoginForm extends Form {
                 'autocomplete' => 'off',
                 'placeholder' => 'Your password',
                 'id' => 'login-password',
-                'class' => 'form-control',
+                'class' => 'input-block-level',
                 'tabindex' => 2,
             ),
         ));
@@ -46,8 +46,21 @@ class LoginForm extends Form {
             'attributes' => array(
                 'type' => 'submit',
                 'class' => 'btn btn-primary btn-block',
-                'tabindex' => 7,
+                'tabindex' => 3,
                 'value' => 'Log in'
+            ),
+        ));
+
+        $this->add(array(
+            'type' => 'Checkbox',
+            'name' => 'remember-me',
+            'options' => array(
+                'label' => 'Remember me',
+            ),
+            'attributes' => array(
+                'id' => 'login-remember-me',
+                'class' => 'checkboxInput',
+                'tabindex' => 4,
             ),
         ));
     }

@@ -24,7 +24,7 @@ class SignupForm extends Form {
                 'autocomplete' => 'off',
                 'placeholder' => 'Your First Name',
                 'id' => 'reg-fname',
-                'class' => 'form-control',
+                'class' => 'input-block-level',
                 'autofocus' => 'autofocus',
                 'tabindex' => 1,
             ),
@@ -37,7 +37,7 @@ class SignupForm extends Form {
                 'autocomplete' => 'off',
                 'placeholder' => 'Your Second Name',
                 'id' => 'reg-sname',
-                'class' => 'form-control',
+                'class' => 'input-block-level',
                 'tabindex' => 2,
             ),
         ));
@@ -49,7 +49,7 @@ class SignupForm extends Form {
                 'autocomplete' => 'off',
                 'placeholder' => 'Your Patr Name',
                 'id' => 'reg-fname',
-                'class' => 'form-control',
+                'class' => 'input-block-level',
                 'tabindex' => 3,
             ),
         ));
@@ -61,7 +61,7 @@ class SignupForm extends Form {
                 'autocomplete' => 'off',
                 'placeholder' => 'Your Email',
                 'id' => 'reg-email',
-                'class' => 'form-control',
+                'class' => 'input-block-level',
                 'tabindex' => 4,
             ),
         ));
@@ -73,7 +73,7 @@ class SignupForm extends Form {
                 'autocomplete' => 'off',
                 'placeholder' => 'Your password',
                 'id' => 'reg-password',
-                'class' => 'form-control',
+                'class' => 'input-block-level',
                 'tabindex' => 5,
             ),
         ));
@@ -85,7 +85,7 @@ class SignupForm extends Form {
                 'autocomplete' => 'off',
                 'placeholder' => 'Repeat your password',
                 'id' => 'reg-password-repeat',
-                'class' => 'form-control',
+                'class' => 'input-block-level',
                 'tabindex' => 6,
             ),
         ));

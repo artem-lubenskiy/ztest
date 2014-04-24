@@ -56,8 +56,7 @@ return array(
             'LoginForm' => 'Users\Form\LoginForm',
             'SignupForm' => 'Users\Form\SignupForm',
         ),
-        'factories' => array(
-        ),
+        'factories' => array(),
         'aliases' => array(
             'translator' => 'MvcTranslator',
         ),
@@ -94,4 +93,32 @@ return array(
             ),
         ),
     ),
+    'navigation' => array(
+        'default' => array(
+            array(
+                'label' => 'Home',
+                'module' => 'users',
+                'controller' => 'index',
+                'action' => 'index',
+                'resource' => 'mvc\users\index',
+                'route' => 'users',
+            ),
+            array(
+                'label' => 'Profile',
+                'module' => 'users',
+                'controller' => 'profile',
+                'action' => 'index',
+                'resource' => 'mvc\users\profile',
+                'route' => 'users',
+            ),
+            array(
+                'label' => 'Search',
+                'module' => 'users',
+                'controller' => 'search',
+                'action' => 'index',
+                'resource' => 'mvc\users\search',
+                'route' => 'users',
+            ),
+        )
+    )
 );

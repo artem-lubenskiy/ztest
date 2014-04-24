@@ -10,6 +10,7 @@ namespace Users\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Zend\Session\Container as Session;
 
 
 class LoginController extends AbstractActionController
@@ -50,9 +51,15 @@ class LoginController extends AbstractActionController
 
     public function testAction()
     {
-        if ($user = $this->identity()) {
+        $authService = $this->getServiceLocator()->get('Zend\Authentication\AuthenticationService');
+
+        if ($authService->hasIdentity()) {
+            $identity = $authService->getStorage()->read();
+            $container = new Session('initialized');
+            $result = ($container->httpClient === md5($_SERVER['REMOTE_ADDR'].$_SERVER['HTTP_USER_AGENT']));
+
             return new ViewModel(array(
-                'identity' => 'You are logged in.',
+                'identity' => 'You are logged in.'.var_dump($result).$identity->getEmail(),
             ));
         } else {
             return new ViewModel(array(
